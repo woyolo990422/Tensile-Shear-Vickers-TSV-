@@ -1,0 +1,23 @@
+Global Parameters
+ISTART =  0          (Read existing wavefunction; if there)
+LREAL=  Auto     (Projection operators: automatic)
+ENCUT  = 600        (Cut-off energy for plane wave basis set, in eV)
+PREC   =  Accurate (Precision level)
+LWAVE  = .FALSE.       (Write WAVECAR or not)
+LCHARG =.FALSE.       (Write CHGCAR or not)
+ADDGRID= .TRUE.        (Increase grid; helps GGA convergence)
+ISMEAR =  0            (Gaussian smearing; metals:1)
+SIGMA  =  0.04         (Smearing value in eV; metals:0.2)
+NELM   =  150           (Max electronic SCF steps)
+NELMIN =  6            (Min electronic SCF steps)
+EDIFF  =  1E-05     (SCF energy convergence; in eV)
+EDIFFG  =  -5E-03
+NSW    =  300          (Max ionic steps)
+IBRION = 2    (Algorithm: 0-MD; 1-Quasi-New; 2-CG)
+ISIF   = 3
+ALGO=Fast
+NPAR=4
+SYMPREC=1E-12
+KSPACING=0.4
+IOPTCELL =0 1 0 1 1 1 0 1 0
+#IOPTCELL = xx yx zx xy yy zy xz yz zz

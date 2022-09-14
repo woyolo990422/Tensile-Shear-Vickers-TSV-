@@ -1,0 +1,49 @@
+#!/bin/bash
+#BSUB -J shear
+#BSUB -n 48
+#BSUB -q 5220r
+module load ips/2018u4
+cp POSCAR POSCAR.orig
+cp POSCAR.orig POSCAR
+a=$(sed -n '3,3p' POSCAR)
+b=$(sed -n '4,4p' POSCAR)
+c=$(sed -n '5,5p' POSCAR)
+
+aa1=$(echo $a | awk -F ' |,' '{print $1}')
+aa2=$(echo $a | awk -F ' |,' '{print $2}')
+aa3=$(echo $a | awk -F ' |,' '{print $3}')
+
+bb1=$(echo $b | awk -F ' |,' '{print $1}')
+bb2=$(echo $b | awk -F ' |,' '{print $2}')
+bb3=$(echo $b | awk -F ' |,' '{print $3}')
+
+cc1=$(echo $c | awk -F ' |,' '{print $1}')
+cc2=$(echo $c | awk -F ' |,' '{print $2}')
+cc3=$(echo $c | awk -F ' |,' '{print $3}')
+
+for ii in {0..800..20}
+do
+ iii=$(echo "scale=8;$ii/2000" |bc)
+  aaa1=$aa1
+  aaa2=$aa2
+  aaa3=$(echo `awk -v x=$aa1 -v y=$iii 'BEGIN{printf "%.8f\n",x*y}'`)
+  bbb1=$bb1
+  bbb2=$bb2
+  bbb3=$bb3
+  ccc1=$(echo `awk -v x=$cc3 -v y=$iii 'BEGIN{printf "%.8f\n",x*y}'`)
+  ccc2=$cc2
+  ccc3=$cc3
+  echo "done"
+mpirun -n 48 /bbfs/fs08/home/js_wangyl/soft/vasp5.4.4/vasp.5.4.4_mod/bin/vasp_std > log
+
+cat > POSCAR-$ii <<!
+POSCAR
+1.0
+         $aaa1  $aaa2 $aaa3
+         $bbb1 $bbb2 $bbb3
+         $ccc1   $ccc2   $ccc3
+!
+cat CONTCAR | tail -n +6 >> POSCAR-$ii
+cp POSCAR-$ii POSCAR
+echo $(grep "in kB" OUTCAR | tail -1)$" "$ii >> KB
+done
